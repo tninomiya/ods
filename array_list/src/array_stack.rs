@@ -11,6 +11,15 @@ pub struct ArrayStack<T: Clone + Debug> {
     n: usize,
 }
 
+impl<T> Default for ArrayStack<T>
+where
+    T: Clone + Debug,
+{
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl<T> ArrayStack<T>
 where
     T: Clone + Debug,
@@ -37,7 +46,7 @@ where
         let len = std::cmp::max(self.n * 2, 1);
         let mut new_array = allocate_with(len);
 
-        for (i, elem) in self.a.as_mut().into_iter().enumerate() {
+        for (i, elem) in self.a.iter_mut().enumerate() {
             new_array[i] = elem.clone();
         }
         self.a = new_array.into_boxed_slice();
