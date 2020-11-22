@@ -1,7 +1,5 @@
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
-    }
-}
+#![warn(missing_docs)]
+//! array_list implements List and Queue interfaces with backing array.
+
+/// Implementation for List
+pub mod array_stack;
