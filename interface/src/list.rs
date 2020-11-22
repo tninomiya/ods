@@ -1,8 +1,5 @@
 /// List provides interface manipulation for a collection of elements.
-pub trait List<T>
-where
-    T: std::fmt::Display + Clone,
-{
+pub trait List<T> {
     /// Return the length of a list.
     fn size(&self) -> usize;
     /// Return the value at the position i.

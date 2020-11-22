@@ -1,9 +1,6 @@
 /// Queue represents a collection of elements.
 /// Provides manipulations for addition, removal with a certain rule.
-pub trait Queue<T>
-where
-    T: std::fmt::Debug + Clone,
-{
+pub trait Queue<T> {
     /// Add a value to a queue.
     fn add(&mut self, x: T);
     /// Remove a next value and return it.
@@ -11,10 +8,7 @@ where
 }
 
 /// Stack represents LIFO queue.
-pub trait Stack<T>
-where
-    T: std::fmt::Debug + Clone,
-{
+pub trait Stack<T> {
     /// Add a value to the tail of a queue.
     fn push(&mut self, x: T);
     /// Remove a last-added value.
@@ -22,10 +16,7 @@ where
 }
 
 /// Dequeue represents double-ended queue.
-pub trait Deque<T>
-where
-    T: std::fmt::Debug + Clone,
-{
+pub trait Deque<T> {
     /// Add a value to the head of a queue.
     fn add_first(&mut self, x: T);
     /// Remove a value from the head of a queue.

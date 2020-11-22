@@ -1,7 +1,7 @@
 /// USet represents an unordered collection of unique elements.
 pub trait USet<T>
 where
-    T: std::fmt::Display + Clone + PartialEq + Eq,
+    T: PartialEq + Eq,
 {
     /// Return the length of a list.
     fn size(&self) -> usize;
@@ -18,7 +18,7 @@ where
 /// SSet represents an ordered collection of unique elements.
 pub trait SSet<T>
 where
-    T: std::fmt::Display + Clone + PartialEq + Eq + std::cmp::Ord,
+    T: PartialEq + Eq + PartialOrd + Ord,
 {
     /// Return the length of a list.
     fn size(&self) -> usize;
