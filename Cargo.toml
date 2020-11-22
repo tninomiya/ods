@@ -1,2 +1,2 @@
 [workspace]
-members = ["interface"]
+members = ["interface", "array_list"]
