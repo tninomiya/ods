@@ -136,29 +136,29 @@ mod tests {
 
     #[test]
     fn list_test() {
-        let mut arr: ArrayStack<i32> = ArrayStack::new();
-        assert_eq!(arr.size(), 0);
-        assert_eq!(arr.get(0), None);
+        let mut list: ArrayStack<i32> = ArrayStack::new();
+        assert_eq!(list.size(), 0);
+        assert_eq!(list.get(0), None);
 
-        arr.add(0, 2);
-        assert_eq!(arr.get(0), Some(&2));
-        assert_eq!(arr.size(), 1);
+        list.add(0, 2);
+        assert_eq!(list.get(0), Some(&2));
+        assert_eq!(list.size(), 1);
 
-        arr.add(0, 1);
-        assert_eq!(arr.get(0), Some(&1));
-        assert_eq!(arr.get(1), Some(&2));
-        assert_eq!(arr.size(), 2);
+        list.add(0, 1);
+        assert_eq!(list.get(0), Some(&1));
+        assert_eq!(list.get(1), Some(&2));
+        assert_eq!(list.size(), 2);
 
-        assert_eq!(arr.remove(0), Some(1));
-        assert_eq!(arr.get(0), Some(&2));
-        assert_eq!(arr.size(), 1);
+        assert_eq!(list.remove(0), Some(1));
+        assert_eq!(list.get(0), Some(&2));
+        assert_eq!(list.size(), 1);
 
-        assert_eq!(arr.set(0, 5), Some(2));
-        assert_eq!(arr.get(0), Some(&5));
+        assert_eq!(list.set(0, 5), Some(2));
+        assert_eq!(list.get(0), Some(&5));
 
-        assert_eq!(arr.remove(0), Some(5));
-        assert_eq!(arr.size(), 0);
-        assert_eq!(arr.get(0), None);
+        assert_eq!(list.remove(0), Some(5));
+        assert_eq!(list.size(), 0);
+        assert_eq!(list.get(0), None);
     }
 
     #[test]
