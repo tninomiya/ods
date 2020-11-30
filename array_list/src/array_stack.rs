@@ -1,4 +1,5 @@
 use interface::list::List;
+use interface::queue::Stack;
 use std::fmt::Debug;
 
 /// List implementation with backing array realized by boxed slice.
@@ -115,10 +116,23 @@ where
     }
 }
 
+impl<T> Stack<T> for ArrayStack<T>
+where
+    T: Clone + Debug,
+{
+    fn push(&mut self, x: T) {
+        self.add(self.size(), x);
+    }
+    fn pop(&mut self) -> Option<T> {
+        self.remove(self.size() - 1)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::ArrayStack;
     use interface::list::List;
+    use interface::queue::Stack;
 
     #[test]
     fn list_test() {
@@ -145,5 +159,29 @@ mod tests {
         assert_eq!(arr.remove(0), Some(5));
         assert_eq!(arr.size(), 0);
         assert_eq!(arr.get(0), None);
+    }
+
+    #[test]
+    fn list_stack() {
+        let mut stack: ArrayStack<i32> = ArrayStack::new();
+        assert_eq!(stack.size(), 0);
+        assert_eq!(stack.get(0), None);
+
+        stack.push(2);
+        assert_eq!(stack.get(0), Some(&2));
+        assert_eq!(stack.size(), 1);
+
+        stack.push(1);
+        assert_eq!(stack.get(0), Some(&2));
+        assert_eq!(stack.get(1), Some(&1));
+        assert_eq!(stack.size(), 2);
+
+        assert_eq!(stack.pop(), Some(1));
+        assert_eq!(stack.get(0), Some(&2));
+        assert_eq!(stack.size(), 1);
+
+        assert_eq!(stack.pop(), Some(2));
+        assert_eq!(stack.size(), 0);
+        assert_eq!(stack.get(0), None);
     }
 }
