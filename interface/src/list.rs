@@ -8,6 +8,6 @@ pub trait List<T> {
     fn set(&mut self, i: usize, x: T) -> Option<T>;
     /// Add a value at the position i, and shift following elements to backward.
     fn add(&mut self, i: usize, x: T);
-    /// Remove a value at the position i, and shit following elements to forward.
+    /// Remove a value at the position i, and shift following elements to forward.
     fn remove(&mut self, i: usize) -> Option<T>;
 }
