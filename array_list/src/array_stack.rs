@@ -54,7 +54,7 @@ where
     }
 }
 
-fn allocate_with<T>(n: usize) -> Vec<T> {
+fn allocate_with<T>(n: usize) -> Vec<Option<T>> {
     let mut array = Vec::with_capacity(n);
     unsafe {
         array.set_len(n);
