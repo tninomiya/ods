@@ -2,7 +2,7 @@
 /// Provides manipulations for addition, removal with a certain rule.
 pub trait Queue<T> {
     /// Add a value to a queue.
-    fn add(&mut self, x: T);
+    fn add(&mut self, x: T) -> bool;
     /// Remove a next value and return it.
     fn remove(&mut self) -> Option<T>;
 }
