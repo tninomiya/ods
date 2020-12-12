@@ -38,6 +38,7 @@ where
         self.a.len()
     }
 
+    #[allow(clippy::needless_range_loop)]
     fn resize(&mut self) {
         let len = std::cmp::max(self.n * 2, 1);
         let mut new_array = allocate_with(len);
