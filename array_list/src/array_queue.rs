@@ -12,6 +12,15 @@ pub struct ArrayQueue<T: Clone + Debug> {
     n: usize,
 }
 
+impl<T> Default for ArrayQueue<T>
+where
+    T: Clone + Debug,
+{
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl<T> ArrayQueue<T>
 where
     T: Clone + Debug,
@@ -64,7 +73,7 @@ where
         let pos = (self.j + self.size()) % self.capacity();
         self.a[pos] = Some(x);
         self.n += 1;
-        return true;
+        true
     }
 
     fn remove(&mut self) -> Option<T> {
@@ -74,7 +83,7 @@ where
         let x = self.a[self.j].take();
         self.j = (self.j + 1) % self.capacity();
         self.n -= 1;
-        return x;
+        x
     }
 }
 
@@ -104,11 +113,11 @@ where
         }
     }
 
-    fn add(&mut self, i: usize, x: T) {
+    fn add(&mut self, _i: usize, _x: T) {
         unimplemented!();
     }
 
-    fn remove(&mut self, i: usize) -> Option<T> {
+    fn remove(&mut self, _i: usize) -> Option<T> {
         unimplemented!();
     }
 }
