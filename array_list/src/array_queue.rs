@@ -1,3 +1,4 @@
+use interface::list::List;
 use interface::queue::Queue;
 use std::fmt::Debug;
 
@@ -39,8 +40,8 @@ where
         self.j = 0;
     }
 
-    fn size(&self) -> usize {
-        self.n
+    fn within_bound(&self, i: usize) -> bool {
+        i < self.capacity() && i < self.n
     }
 }
 
@@ -74,6 +75,41 @@ where
         self.j = (self.j + 1) % self.capacity();
         self.n -= 1;
         return x;
+    }
+}
+
+impl<T> List<T> for ArrayQueue<T>
+where
+    T: Clone + Debug,
+{
+    fn size(&self) -> usize {
+        self.n
+    }
+    fn get(&self, i: usize) -> Option<&T> {
+        if !self.within_bound(i) {
+            None
+        } else {
+            self.a[(self.j + i) % self.capacity()].as_ref()
+        }
+    }
+
+    fn set(&mut self, i: usize, x: T) -> Option<T> {
+        if !self.within_bound(i) {
+            panic!(
+                "index must be positive and less than the size of list. i: {}, n: {}",
+                i, self.n
+            )
+        } else {
+            self.a[(self.j + i) % self.capacity()].replace(x)
+        }
+    }
+
+    fn add(&mut self, i: usize, x: T) {
+        unimplemented!();
+    }
+
+    fn remove(&mut self, i: usize) -> Option<T> {
+        unimplemented!();
     }
 }
 
