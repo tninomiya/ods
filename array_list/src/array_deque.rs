@@ -4,7 +4,7 @@ use std::fmt::Debug;
 /// List implementation with backing array realized by boxed slice.
 /// It is optimized for implementing deque interface.
 /// O(1): get(i), set(i, x)
-/// O(1 + n - i): add(i, x), remove(i)
+/// O(1 + min{i, n - i}): add(i, x), remove(i)
 pub struct ArrayDeque<T>
 where
     T: Clone + Debug,
