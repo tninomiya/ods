@@ -26,6 +26,14 @@ where
             n: 0,
         }
     }
+
+    fn capacity(&self) -> usize {
+        self.a.len()
+    }
+
+    fn within_bound(&self, i: usize) -> bool {
+        i < self.n
+    }
 }
 
 impl<T> Default for ArrayDeque<T>
@@ -50,14 +58,27 @@ where
     T: Clone + Debug,
 {
     fn size(&self) -> usize {
-        unimplemented!();
+        self.n
     }
-    fn get(&self, _i: usize) -> Option<&T> {
-        unimplemented!();
+    fn get(&self, i: usize) -> Option<&T> {
+        if !self.within_bound(i) {
+            None
+        } else {
+            self.a[(self.j + i) % self.capacity()].as_ref()
+        }
     }
-    fn set(&mut self, _i: usize, _x: T) -> Option<T> {
-        unimplemented!();
+    fn set(&mut self, i: usize, x: T) -> Option<T> {
+        if !self.within_bound(i) {
+            panic!(
+                "index must be positive and less than the size of list. i: {}, n: {}",
+                i,
+                self.size()
+            )
+        } else {
+            self.a[(self.j + i) % self.capacity()].replace(x)
+        }
     }
+
     fn add(&mut self, _i: usize, _x: T) {
         unimplemented!();
     }
