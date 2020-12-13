@@ -51,7 +51,8 @@ where
     }
 
     fn within_bound(&self, i: usize) -> bool {
-        i < self.capacity() && i < self.n
+        // n cannot be larger than the capacity of backing array
+        i < self.n
     }
 }
 
