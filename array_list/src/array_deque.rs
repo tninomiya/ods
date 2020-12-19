@@ -1,10 +1,12 @@
 use interface::list::List;
+use interface::queue::Deque;
 use std::fmt::Debug;
 
 /// List implementation with backing array realized by boxed slice.
 /// It is optimized for implementing deque interface.
 /// O(1): get(i), set(i, x)
 /// O(1 + min{i, n - i}): add(i, x), remove(i)
+#[derive(Debug)]
 pub struct ArrayDeque<T>
 where
     T: Clone + Debug,
@@ -119,6 +121,9 @@ where
     }
 
     fn remove(&mut self, i: usize) -> Option<T> {
+        if !self.within_bound(i) {
+            return None;
+        }
         let x = self.a.get_mut((self.j + i) % self.capacity())?.take();
 
         if i < self.size() / 2 {
@@ -143,22 +148,42 @@ where
     }
 }
 
+impl<T> Deque<T> for ArrayDeque<T>
+where
+    T: Clone + Debug,
+{
+    fn add_first(&mut self, x: T) {
+        self.add(0, x);
+    }
+    fn remove_first(&mut self) -> Option<T> {
+        self.remove(0)
+    }
+    fn add_last(&mut self, x: T) {
+        self.add(self.size(), x)
+    }
+    fn remove_last(&mut self) -> Option<T> {
+        let pos = if self.size() == 0 { 0 } else { self.size() - 1 };
+        self.remove(pos)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::ArrayDeque;
-    use interface::list::List;
 
     #[test]
     fn list_test() {
+        use interface::list::List;
+
         let mut list: ArrayDeque<i32> = ArrayDeque::new();
         assert_eq!(list.size(), 0);
         assert_eq!(list.get(0), None);
 
-        list.add(0, 2);
-        assert_eq!(list.get(0), Some(&2));
+        list.add(0, 1);
+        assert_eq!(list.get(0), Some(&1));
         assert_eq!(list.size(), 1);
 
-        list.add(0, 1);
+        list.add(1, 2);
         assert_eq!(list.get(0), Some(&1));
         assert_eq!(list.get(1), Some(&2));
         assert_eq!(list.size(), 2);
@@ -173,5 +198,23 @@ mod tests {
         assert_eq!(list.remove(0), Some(5));
         assert_eq!(list.size(), 0);
         assert_eq!(list.get(0), None);
+    }
+
+    #[test]
+    fn deque_test() {
+        use interface::queue::Deque;
+
+        let mut deque: ArrayDeque<i32> = ArrayDeque::new();
+        deque.add_first(1);
+        deque.add_last(2);
+        deque.add_first(0);
+        deque.add_last(5);
+
+        assert_eq!(deque.remove_first(), Some(0));
+        assert_eq!(deque.remove_last(), Some(5));
+        assert_eq!(deque.remove_last(), Some(2));
+        assert_eq!(deque.remove_first(), Some(1));
+        assert_eq!(deque.remove_first(), None);
+        assert_eq!(deque.remove_last(), None);
     }
 }
