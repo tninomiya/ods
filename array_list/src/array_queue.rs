@@ -27,8 +27,12 @@ where
 {
     /// Generate empty ArrayQueue
     pub fn new() -> Self {
+        ArrayQueue::with_capacity(0)
+    }
+
+    fn with_capacity(i: usize) -> Self {
         ArrayQueue {
-            a: allocate_with(0).into_boxed_slice(),
+            a: allocate_with(i).into_boxed_slice(),
             j: 0,
             n: 0,
         }
@@ -53,6 +57,10 @@ where
     fn within_bound(&self, i: usize) -> bool {
         // n cannot be larger than the capacity of backing array
         i < self.n
+    }
+
+    fn size(&self) -> usize {
+        self.n
     }
 }
 
@@ -128,6 +136,44 @@ where
 mod tests {
     use super::ArrayQueue;
     use interface::queue::Queue;
+
+    #[test]
+    fn capacity_test() {
+        // [None, None, Some(a), Some(b), Some(c), None]
+        let mut queue: ArrayQueue<char> = ArrayQueue::with_capacity(6);
+        assert_eq!(queue.add('a'), true);
+        assert_eq!(queue.add('a'), true);
+        assert_eq!(queue.add('a'), true);
+        assert_eq!(queue.add('b'), true);
+        assert_eq!(queue.add('c'), true);
+        assert_eq!(queue.remove(), Some('a'));
+        assert_eq!(queue.remove(), Some('a'));
+        assert_eq!(queue.capacity(), 6);
+        assert_eq!(queue.size(), 3);
+
+        assert_eq!(queue.add('d'), true);
+        assert_eq!(queue.capacity(), 6);
+        assert_eq!(queue.size(), 4);
+        assert_eq!(queue.add('e'), true);
+        assert_eq!(queue.capacity(), 6);
+        assert_eq!(queue.size(), 5);
+        assert_eq!(queue.remove(), Some('a'));
+        assert_eq!(queue.capacity(), 6);
+        assert_eq!(queue.size(), 4);
+        assert_eq!(queue.add('f'), true);
+        assert_eq!(queue.capacity(), 6);
+        assert_eq!(queue.size(), 5);
+        assert_eq!(queue.add('g'), true);
+        assert_eq!(queue.capacity(), 6);
+        assert_eq!(queue.size(), 6);
+        assert_eq!(queue.add('h'), true);
+        assert_eq!(queue.capacity(), 12);
+        assert_eq!(queue.size(), 7);
+        assert_eq!(queue.remove(), Some('b'));
+        assert_eq!(queue.capacity(), 12);
+        assert_eq!(queue.size(), 6);
+        assert_eq!(queue.size(), 7);
+    }
 
     #[test]
     fn queue_test() {
