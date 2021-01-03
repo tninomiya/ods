@@ -27,8 +27,12 @@ where
 {
     /// Generate empty ArrayStack.
     pub fn new() -> Self {
+        ArrayStack::with_capacity(0)
+    }
+
+    fn with_capacity(i: usize) -> Self {
         ArrayStack {
-            a: allocate_with(0).into_boxed_slice(),
+            a: allocate_with(i).into_boxed_slice(),
             n: 0,
         }
     }
@@ -47,7 +51,7 @@ where
         let len = std::cmp::max(self.n * 2, 1);
         let mut new_array = allocate_with(len);
 
-        for (i, elem) in self.a.iter_mut().enumerate() {
+        for (i, elem) in self.a.iter_mut().enumerate().take(self.n) {
             new_array[i] = elem.clone();
         }
         self.a = new_array.into_boxed_slice();
@@ -89,7 +93,7 @@ where
     }
 
     fn add(&mut self, i: usize, x: T) {
-        if self.size() + 1 >= self.capacity() {
+        if self.size() + 1 > self.capacity() {
             self.resize();
         }
 
@@ -107,11 +111,12 @@ where
         let x = self.a.get_mut(i)?.take();
         if i < self.n {
             self.a[i..self.n].rotate_left(1);
-            if self.capacity() >= 3 * self.size() {
-                self.resize();
-            }
         }
         self.n -= 1;
+        if self.capacity() >= 3 * self.size() {
+            self.resize();
+        }
+
         x
     }
 }
@@ -133,6 +138,46 @@ mod tests {
     use super::ArrayStack;
     use interface::list::List;
     use interface::queue::Stack;
+
+    #[test]
+    fn capacity_test() {
+        // [Some(b), Some(r), Some(e), Some(d), None, None]
+        let mut list: ArrayStack<char> = ArrayStack::with_capacity(6);
+        assert_eq!(list.capacity(), 6);
+        assert_eq!(list.size(), 0);
+        list.add(0, 'b');
+        list.add(1, 'r');
+        list.add(2, 'e');
+        list.add(3, 'd');
+        assert_eq!(list.capacity(), 6);
+        assert_eq!(list.size(), 4);
+
+        list.add(2, 'e');
+        assert_eq!(list.capacity(), 6);
+        assert_eq!(list.size(), 5);
+        list.add(5, 'r');
+        assert_eq!(list.capacity(), 6);
+        assert_eq!(list.size(), 6);
+        list.add(5, 'e');
+        assert_eq!(list.capacity(), 12);
+        assert_eq!(list.size(), 7);
+
+        assert_eq!(list.remove(4), Some('d'));
+        assert_eq!(list.capacity(), 12);
+        assert_eq!(list.size(), 6);
+        assert_eq!(list.remove(4), Some('e'));
+        assert_eq!(list.capacity(), 12);
+        assert_eq!(list.size(), 5);
+        assert_eq!(list.remove(4), Some('r'));
+        assert_eq!(list.capacity(), 8);
+        assert_eq!(list.size(), 4);
+        assert_eq!(list.set(2, 'i'), Some('e'));
+        // [Some(b), Some(r), Some(i), Some(e)]
+        assert_eq!(list.get(0), Some(&'b'));
+        assert_eq!(list.get(1), Some(&'r'));
+        assert_eq!(list.get(2), Some(&'i'));
+        assert_eq!(list.get(3), Some(&'e'));
+    }
 
     #[test]
     fn list_test() {
@@ -162,7 +207,7 @@ mod tests {
     }
 
     #[test]
-    fn list_stack() {
+    fn stack_test() {
         let mut stack: ArrayStack<i32> = ArrayStack::new();
         assert_eq!(stack.size(), 0);
         assert_eq!(stack.get(0), None);
