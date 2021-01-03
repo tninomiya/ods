@@ -149,30 +149,43 @@ mod tests {
         assert_eq!(queue.remove(), Some('a'));
         assert_eq!(queue.remove(), Some('a'));
         assert_eq!(queue.capacity(), 6);
+        assert_eq!(queue.j, 2);
         assert_eq!(queue.size(), 3);
 
         assert_eq!(queue.add('d'), true);
         assert_eq!(queue.capacity(), 6);
+        assert_eq!(queue.j, 2);
         assert_eq!(queue.size(), 4);
+
         assert_eq!(queue.add('e'), true);
+        assert_eq!(queue.j, 2);
         assert_eq!(queue.capacity(), 6);
         assert_eq!(queue.size(), 5);
+
         assert_eq!(queue.remove(), Some('a'));
+        assert_eq!(queue.j, 3);
         assert_eq!(queue.capacity(), 6);
         assert_eq!(queue.size(), 4);
+
         assert_eq!(queue.add('f'), true);
+        assert_eq!(queue.j, 3);
         assert_eq!(queue.capacity(), 6);
         assert_eq!(queue.size(), 5);
+
         assert_eq!(queue.add('g'), true);
+        assert_eq!(queue.j, 3);
         assert_eq!(queue.capacity(), 6);
         assert_eq!(queue.size(), 6);
+
         assert_eq!(queue.add('h'), true);
+        assert_eq!(queue.j, 0);
         assert_eq!(queue.capacity(), 12);
         assert_eq!(queue.size(), 7);
+
         assert_eq!(queue.remove(), Some('b'));
+        assert_eq!(queue.j, 1);
         assert_eq!(queue.capacity(), 12);
         assert_eq!(queue.size(), 6);
-        assert_eq!(queue.size(), 7);
     }
 
     #[test]
