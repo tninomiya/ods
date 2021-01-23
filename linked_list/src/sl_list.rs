@@ -1,4 +1,4 @@
-use interface::queue::Stack;
+use interface::queue::{Queue, Stack};
 use std::cell::RefCell;
 use std::fmt::Debug;
 use std::mem;
@@ -100,10 +100,43 @@ where
     }
 }
 
+impl<T> Queue<T> for SLList<T>
+where
+    T: Debug,
+{
+    fn add(&mut self, x: T) -> bool {
+        let u = Node::new_link(x, None).unwrap();
+        if self.n == 0 {
+            self.head = Some(u.clone());
+        }
+
+        if let Some(t) = self.tail.take() {
+            t.borrow_mut().next = Some(u.clone())
+        }
+
+        self.tail = Some(u);
+        self.n += 1;
+        true
+    }
+
+    fn remove(&mut self) -> Option<T> {
+        if self.n == 0 {
+            return None;
+        }
+        self.n -= 1;
+        self.head.take().map(|h| {
+            match h.borrow_mut().next.take() {
+                Some(n) => self.head = Some(n),
+                _ => self.tail = None,
+            }
+            Rc::try_unwrap(h).ok().unwrap().into_inner().element
+        })
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
-    use interface::queue::Stack;
 
     fn assert_element<T>(a: &Link<T>, e: Option<T>)
     where
@@ -121,6 +154,8 @@ mod tests {
 
     #[test]
     fn test_stack() {
+        use interface::queue::Stack;
+
         let mut list: SLList<char> = SLList::new();
         list.push('a');
         list.push('b');
@@ -166,6 +201,64 @@ mod tests {
         assert_element(&list.tail, None);
 
         assert_eq!(list.pop(), None);
+        assert_eq!(list.size(), 0);
+        assert_element(&list.head, None);
+        assert_element(&list.tail, None);
+    }
+
+    #[test]
+    fn test_queue() {
+        use interface::queue::Queue;
+
+        let mut list: SLList<char> = SLList::new();
+        list.add('a');
+        assert_eq!(list.size(), 1);
+        assert_eq!(list.remove(), Some('a'));
+        list.add('a');
+        list.add('b');
+        list.add('c');
+        list.add('d');
+        list.add('e');
+        assert_eq!(list.size(), 5);
+        assert_element(&list.head, Some('a'));
+        assert_element(&list.tail, Some('e'));
+
+        assert_eq!(list.remove(), Some('a'));
+        assert_eq!(list.size(), 4);
+
+        assert_element(&list.head, Some('b'));
+        assert_element(&list.tail, Some('e'));
+        assert_eq!(list.remove(), Some('b'));
+        assert_eq!(list.size(), 3);
+        assert_element(&list.head, Some('c'));
+        assert_element(&list.tail, Some('e'));
+
+        assert_eq!(list.remove(), Some('c'));
+        assert_eq!(list.size(), 2);
+        assert_element(&list.head, Some('d'));
+        assert_element(&list.tail, Some('e'));
+
+        assert_eq!(list.remove(), Some('d'));
+        assert_eq!(list.size(), 1);
+        assert_element(&list.head, Some('e'));
+        assert_element(&list.tail, Some('e'));
+
+        list.add('x');
+        assert_eq!(list.size(), 2);
+        assert_element(&list.head, Some('e'));
+        assert_element(&list.tail, Some('x'));
+
+        assert_eq!(list.remove(), Some('e'));
+        assert_eq!(list.size(), 1);
+        assert_element(&list.head, Some('x'));
+        assert_element(&list.tail, Some('x'));
+
+        assert_eq!(list.remove(), Some('x'));
+        assert_eq!(list.size(), 0);
+        assert_element(&list.head, None);
+        assert_element(&list.tail, None);
+
+        assert_eq!(list.remove(), None);
         assert_eq!(list.size(), 0);
         assert_element(&list.head, None);
         assert_element(&list.tail, None);
