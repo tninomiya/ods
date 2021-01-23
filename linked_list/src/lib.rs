@@ -3,3 +3,6 @@
 
 /// Singly-Linked List represents an implementation of List.
 pub mod sl_list;
+
+/// Singly-Linked List represents a simple implementation of List.
+pub mod simple_sl_list;
