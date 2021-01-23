@@ -1,7 +1,6 @@
 use interface::queue::{Queue, Stack};
 use std::cell::RefCell;
 use std::fmt::Debug;
-use std::mem;
 use std::rc::Rc;
 
 // ref: https://rust-unofficial.github.io/too-many-lists/index.html
@@ -77,7 +76,7 @@ where
     T: Debug,
 {
     fn push(&mut self, x: T) {
-        let u = Node::new_link(x, mem::replace(&mut self.head, None)).unwrap();
+        let u = Node::new_link(x, self.head.take()).unwrap();
         if self.n == 0 {
             self.tail = Some(u.clone()); // increment reference counter
         }
