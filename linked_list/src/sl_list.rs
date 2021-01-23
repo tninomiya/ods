@@ -28,6 +28,10 @@ where
             next: None,
         }
     }
+
+    fn new_link(x: T, next: Link<T>) -> Option<Rc<RefCell<Self>>> {
+        Some(Rc::new(RefCell::new(Node { element: x, next })))
+    }
 }
 
 /// Singly-Linked List represents an implementation of List.
@@ -73,12 +77,9 @@ where
     T: Debug,
 {
     fn push(&mut self, x: T) {
-        let u = Rc::new(RefCell::new(Node {
-            element: x,
-            next: mem::replace(&mut self.head, None),
-        }));
+        let u = Node::new_link(x, mem::replace(&mut self.head, None)).unwrap();
         if self.n == 0 {
-            self.tail = Some(u.clone());
+            self.tail = Some(u.clone()); // increment reference counter
         }
         self.head.replace(u);
         self.n += 1;
