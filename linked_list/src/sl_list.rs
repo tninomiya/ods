@@ -138,7 +138,7 @@ where
 mod tests {
     use super::*;
 
-    fn assert_element<T>(a: &Link<T>, e: Option<T>)
+    fn assert_inner<T>(a: &Link<T>, e: Option<T>)
     where
         T: Debug + Eq,
     {
@@ -163,47 +163,47 @@ mod tests {
         list.push('d');
         list.push('e');
         assert_eq!(list.size(), 5);
-        assert_element(&list.head, Some('e'));
-        assert_element(&list.tail, Some('a'));
+        assert_inner(&list.head, Some('e'));
+        assert_inner(&list.tail, Some('a'));
 
         assert_eq!(list.pop(), Some('e'));
         assert_eq!(list.size(), 4);
-        assert_element(&list.head, Some('d'));
-        assert_element(&list.tail, Some('a'));
+        assert_inner(&list.head, Some('d'));
+        assert_inner(&list.tail, Some('a'));
         assert_eq!(list.pop(), Some('d'));
         assert_eq!(list.size(), 3);
-        assert_element(&list.head, Some('c'));
-        assert_element(&list.tail, Some('a'));
+        assert_inner(&list.head, Some('c'));
+        assert_inner(&list.tail, Some('a'));
 
         assert_eq!(list.pop(), Some('c'));
         assert_eq!(list.size(), 2);
-        assert_element(&list.head, Some('b'));
-        assert_element(&list.tail, Some('a'));
+        assert_inner(&list.head, Some('b'));
+        assert_inner(&list.tail, Some('a'));
 
         assert_eq!(list.pop(), Some('b'));
         assert_eq!(list.size(), 1);
-        assert_element(&list.head, Some('a'));
-        assert_element(&list.tail, Some('a'));
+        assert_inner(&list.head, Some('a'));
+        assert_inner(&list.tail, Some('a'));
 
         list.push('x');
         assert_eq!(list.size(), 2);
-        assert_element(&list.head, Some('x'));
-        assert_element(&list.tail, Some('a'));
+        assert_inner(&list.head, Some('x'));
+        assert_inner(&list.tail, Some('a'));
 
         assert_eq!(list.pop(), Some('x'));
         assert_eq!(list.size(), 1);
-        assert_element(&list.head, Some('a'));
-        assert_element(&list.tail, Some('a'));
+        assert_inner(&list.head, Some('a'));
+        assert_inner(&list.tail, Some('a'));
 
         assert_eq!(list.pop(), Some('a'));
         assert_eq!(list.size(), 0);
-        assert_element(&list.head, None);
-        assert_element(&list.tail, None);
+        assert_inner(&list.head, None);
+        assert_inner(&list.tail, None);
 
         assert_eq!(list.pop(), None);
         assert_eq!(list.size(), 0);
-        assert_element(&list.head, None);
-        assert_element(&list.tail, None);
+        assert_inner(&list.head, None);
+        assert_inner(&list.tail, None);
     }
 
     #[test]
@@ -220,47 +220,47 @@ mod tests {
         list.add('d');
         list.add('e');
         assert_eq!(list.size(), 5);
-        assert_element(&list.head, Some('a'));
-        assert_element(&list.tail, Some('e'));
+        assert_inner(&list.head, Some('a'));
+        assert_inner(&list.tail, Some('e'));
 
         assert_eq!(list.remove(), Some('a'));
         assert_eq!(list.size(), 4);
 
-        assert_element(&list.head, Some('b'));
-        assert_element(&list.tail, Some('e'));
+        assert_inner(&list.head, Some('b'));
+        assert_inner(&list.tail, Some('e'));
         assert_eq!(list.remove(), Some('b'));
         assert_eq!(list.size(), 3);
-        assert_element(&list.head, Some('c'));
-        assert_element(&list.tail, Some('e'));
+        assert_inner(&list.head, Some('c'));
+        assert_inner(&list.tail, Some('e'));
 
         assert_eq!(list.remove(), Some('c'));
         assert_eq!(list.size(), 2);
-        assert_element(&list.head, Some('d'));
-        assert_element(&list.tail, Some('e'));
+        assert_inner(&list.head, Some('d'));
+        assert_inner(&list.tail, Some('e'));
 
         assert_eq!(list.remove(), Some('d'));
         assert_eq!(list.size(), 1);
-        assert_element(&list.head, Some('e'));
-        assert_element(&list.tail, Some('e'));
+        assert_inner(&list.head, Some('e'));
+        assert_inner(&list.tail, Some('e'));
 
         list.add('x');
         assert_eq!(list.size(), 2);
-        assert_element(&list.head, Some('e'));
-        assert_element(&list.tail, Some('x'));
+        assert_inner(&list.head, Some('e'));
+        assert_inner(&list.tail, Some('x'));
 
         assert_eq!(list.remove(), Some('e'));
         assert_eq!(list.size(), 1);
-        assert_element(&list.head, Some('x'));
-        assert_element(&list.tail, Some('x'));
+        assert_inner(&list.head, Some('x'));
+        assert_inner(&list.tail, Some('x'));
 
         assert_eq!(list.remove(), Some('x'));
         assert_eq!(list.size(), 0);
-        assert_element(&list.head, None);
-        assert_element(&list.tail, None);
+        assert_inner(&list.head, None);
+        assert_inner(&list.tail, None);
 
         assert_eq!(list.remove(), None);
         assert_eq!(list.size(), 0);
-        assert_element(&list.head, None);
-        assert_element(&list.tail, None);
+        assert_inner(&list.head, None);
+        assert_inner(&list.tail, None);
     }
 }
