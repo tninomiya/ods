@@ -109,10 +109,14 @@ mod tests {
     where
         T: Debug + Eq,
     {
-        if a.is_none() && e.is_none() {
-            return;
+        match (a, e) {
+            (None, None) => return,
+            (Some(b), Some(f)) => assert_eq!(b.borrow().element, f),
+            (b, f) => panic!(
+                "assertion mismatch. left: `{:?}` should be equal to right: `{:?}`",
+                b, f
+            ),
         }
-        assert_eq!(a.as_ref().unwrap().borrow().element, e.unwrap());
     }
 
     #[test]
