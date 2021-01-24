@@ -78,7 +78,7 @@ where
     fn push(&mut self, x: T) {
         let u = Node::new_link(x, self.head.take()).unwrap();
         if self.n == 0 {
-            self.tail = Some(u.clone()); // increment reference counter
+            self.tail = Some(Rc::clone(&u));
         }
         self.head.replace(u);
         self.n += 1;
@@ -106,11 +106,11 @@ where
     fn add(&mut self, x: T) -> bool {
         let u = Node::new_link(x, None).unwrap();
         if self.n == 0 {
-            self.head = Some(u.clone());
+            self.head = Some(Rc::clone(&u));
         }
 
         if let Some(t) = self.tail.take() {
-            t.borrow_mut().next = Some(u.clone())
+            t.borrow_mut().next = Some(Rc::clone(&u))
         }
 
         self.tail = Some(u);
